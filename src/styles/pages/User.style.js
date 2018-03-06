@@ -65,5 +65,7 @@ export var styles = StyleSheet.create({
         color: '#a7a7a7',
         letterSpacing: -0.5
     },
-
+    optRow: {
+        justifyContent: 'center'
+    }
 });

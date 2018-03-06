@@ -1,3 +1,6 @@
+/**
+ * 用户信息页
+ */
 import React, { Component } from 'react';
 import NavigationBar from 'react-native-navbar';
 import {
@@ -9,35 +12,21 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {styles} from '../styles/pages/User.style';
-import {AppImage} from '../resource/AppImage';
+import {logout} from '../modules/redux/modules/auth';
 
 class User extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            input_user: "",
-            input_code: "",
-            error: "",
-            waiting: true
+            error: ""
         }
     }
 
-    // 发送短信验证码
-    async sendCode() {
-        this.props.sendCode();
-    }
-
-    // 登陆
-    async login() {
-        const data = {
-            user: this.state.input_user,
-            code: this.state.input_code
-        };
+    // 推出登陆
+    async logout() {
         try {
-            await this.props.login(data);
-            this.props.navigator.push({
-                location: '/splashScreen'
-            });
+            // await this.props.logout();
+            this.props.navigator.popToTop();
         }
         catch (error) {
             this.setState({error: error.message});
@@ -146,6 +135,16 @@ class User extends Component {
                         </TouchableOpacity>
                     </View>
 
+                    <View style={styles.itemList}>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            style={[styles.itemRow, styles.lastItemRow, styles.optRow]}
+                            onPress={()=>this.logout()}
+                        >
+                            <Text>退出登陆</Text>
+                        </TouchableOpacity>
+                    </View>
+
                 </ScrollView>
             </View>
         );
@@ -153,5 +152,10 @@ class User extends Component {
 }
 
 export default connect(
-    state=>({}),
+    state=>({
+        userInfo: state.auth.userInfo
+    }),
+    dispatch=>({
+        logout: ()=>dispatch(logout())
+    })
 )(User)

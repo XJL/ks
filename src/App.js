@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import store from './modules/redux/store';
 import Page from './modules/navigation/Page';
 import NavigatorProvider from './modules/navigation/NavigatorProvider';
+import BackManager from './modules/BackManager';
 
 const INITIAL_ROUTE = {
     location: '/',
@@ -23,6 +24,10 @@ const sceneConfig = initSceneConfig();
 export default class App extends Component {
     constructor(props) {
         super(props);
+    }
+    componentDidMount() {
+        // 初始化物理返回键的事件监听
+        BackManager.init({navigator: this.refs.navigator});
     }
     configureScene = route => {
         if (route.configure) {

@@ -7,9 +7,9 @@ import DeviceInfo from 'react-native-device-info';
 // const FileUpload = NativeModules.FileUpload;
 const NetworkFailed = '加载失败，请检查网络状态！';
 
-export const client = Platform.OS === 'web' ? 'web' : 'app';
+export const client = 'app';
 export {appVersion as version} from '../../constants/def';
-export const udid = Platform.OS === 'web' ? '' : DeviceInfo.getUniqueID();
+export const udid = DeviceInfo.getUniqueID();
 
 export const URLs = urls;
 
@@ -66,7 +66,7 @@ async function request(urlKey, method, params = {}, format, token = '') {
     if (!url) {
         throw new Error('请求错误：地址不能为空');
     }
-    url = urls.host + url;
+    url = `${urls.host}/ks_manager/manager/${urlKey}.do`;
 
     let options = {
         method: method,
@@ -119,30 +119,24 @@ async function request(urlKey, method, params = {}, format, token = '') {
             {
                 return jsonObj;
             }
-            else if (jsonObj.code == null) {
+            else if (jsonObj.type == null) {
                 return jsonObj;
             }
-            else if (jsonObj.code == 0) {
-                // 只返回obj中的信息
-                return jsonObj.obj;
+            else if (jsonObj.type == 0) {
+                // 成功返回整个json对象
+                return jsonObj;
             }
-            else if (jsonObj.code == 1) {
-                if (jsonObj.message) {
-                    throw new Error(jsonObj.message);
+            else if (jsonObj.type == 1) {
+                if (jsonObj.msg) {
+                    throw new Error(jsonObj.msg);
                 }
                 else {
                     throw new Error('未知错误');
                 }
             }
-            else if (jsonObj.code == 777) {
-                return jsonObj.obj;
-            }
-            else if (jsonObj.code == 999) {
-                throw new Error('请先登录');
-            }
             else {
-                if (jsonObj.message) {
-                    throw new Error(jsonObj.message);
+                if (jsonObj.msg) {
+                    throw new Error(jsonObj.msg);
                 }
                 else {
                     throw new Error('未知错误');

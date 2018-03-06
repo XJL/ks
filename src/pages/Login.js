@@ -1,3 +1,6 @@
+/**
+ * 登陆页
+ */
 import React, { Component } from 'react';
 import {
     Text,
@@ -21,6 +24,7 @@ class Login extends Component {
         super(props);
         this.state = {
             input_user: "",
+            input_pwd: "",
             input_code: "",
             error: "",
             waiting: true
@@ -35,11 +39,12 @@ class Login extends Component {
     // 登陆
     async login() {
         const data = {
-            user: this.state.input_user,
-            code: this.state.input_code
+            username: this.state.input_user,
+            password: this.state.input_pwd,
+            changeCode: this.state.input_code
         };
         try {
-            await this.props.login(data);
+            // await this.props.login(data);
             this.props.navigator.push({
                 location: '/splashScreen'
             });
@@ -67,7 +72,7 @@ class Login extends Component {
                         placeholder="输入手机号码"
                         value={this.state.input_user}
                         keyboardType="numeric"
-                        onChangeText={input_user=>this.setState({input_user})}
+                        onChangeText={input_user=>this.setState({input_user, error: ""})}
                         renderController={()=>{
                             return (
                                 <Button
@@ -80,10 +85,26 @@ class Login extends Component {
                     <TextBox
                         style={styles.textBox}
                         inputStyle={styles.inputStyle}
+                        placeholder="输入密码"
+                        value={this.state.input_pwd}
+                        keyboardType="numeric"
+                        onChangeText={input_pwd=>this.setState({input_pwd})}
+                        renderController={()=>{
+                            return (
+                                <Button
+                                    icon={require('../resource/images/textbox_clear.png')}
+                                    onPress={()=>{ this.setState({input_pwd: '', error: ""}) }}
+                                />
+                            );
+                        }}
+                    />
+                    <TextBox
+                        style={styles.textBox}
+                        inputStyle={styles.inputStyle}
                         placeholder="输入短信验证码"
                         value={this.state.input_code}
                         keyboardType="numeric"
-                        onChangeText={input_code=>this.setState({input_code})}
+                        onChangeText={input_code=>this.setState({input_code, error: ""})}
                         renderController={()=>{
                             return (
                                 <CountDown
@@ -111,9 +132,11 @@ class Login extends Component {
 }
 
 export default connect(
-    state=>({}),
+    state=>({
+        codeContent: state.auth.codeContent, // 验证码信息
+    }),
     dispatch=>({
-        sendCode: ()=>dispatch(sendCode()),
-        login: (data)=>dispatch(login(data))
+        sendCode: ()=>dispatch(sendCode()), // 获取验证码
+        login: (data)=>dispatch(login(data)) // 登陆
     })
 )(Login)
