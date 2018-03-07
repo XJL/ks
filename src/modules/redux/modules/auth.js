@@ -58,7 +58,7 @@ export function login(data) {
                 requestData.token = code.token;
             }
             else {
-                throw new Error("请先获取短信验证码");
+                throw new Error("请先获取验证码");
             }
             // 登陆
             const rsp = await Request.apiPost(Request.URLs.login, requestData);
@@ -106,7 +106,7 @@ export function register(data) {
                 requestData.token = code.token;
             }
             else {
-                throw new Error("请先获取短信验证码");
+                throw new Error("请先获取验证码");
             }
             await Request.apiPost(Request.URLs.register, requestData);
             dispatch(Action.clearCodeAction({codeContent: null}));

@@ -20,7 +20,7 @@ import {AppImage} from '../resource/AppImage';
 
 import {login, sendCode} from '../modules/redux/modules/auth';
 
-class Login extends Component {
+class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -105,19 +105,19 @@ class Login extends Component {
 
     // 去忘记密码页面
     goForget() {
-        this.props.navigator.push({location: '/reset'});
+
     }
 
     // 去注册页面
     goRegister() {
-        this.props.navigator.push({location: '/register'});
+
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <NavBar
-                    title={"登陆"}
+                    title={"注册"}
                     statusBar={{hidden: true}} // ios的状态栏才有效
                 />
                 <InputScrollView
@@ -160,14 +160,14 @@ class Login extends Component {
                     <TextBox
                         style={styles.textBox}
                         inputStyle={styles.inputStyle}
-                        placeholder="输入验证码"
+                        placeholder="输入短信验证码"
                         value={this.state.input_code}
                         keyboardType="numeric"
                         onChangeText={input_code=>this.setState({input_code, error: ""})}
                         renderController={()=>{
                             return (
                                 <CountDown
-                                    text="获取短信验证码"
+                                    text="获取验证码"
                                     style={styles.countDown}
                                     disableStyle={styles.countDownDisable}
                                     onPress={()=>this.sendCode()}
@@ -176,21 +176,12 @@ class Login extends Component {
                         }}
                     />
 
-                    {
-                        // <Text style={styles.errorText}>{this.state.error}</Text>
-                    }
-
                     <NormalButton
-                        text="登录"
+                        text="注册"
                         style={styles.loginButton}
                         enable={this.state.input_user && this.state.input_pwd && this.state.input_code && this.state.waiting}
                         onPress={()=>this.login()}
                     />
-
-                    <View style={styles.optRow}>
-                        <Text onPress={()=>this.goRegister()}>免费注册</Text>
-                        <Text onPress={()=>this.goForget()}>忘记密码</Text>
-                    </View>
                 </InputScrollView>
             </View>
         );
@@ -205,4 +196,4 @@ export default connect(
         sendCode: ()=>dispatch(sendCode()), // 获取验证码
         login: (data)=>dispatch(login(data)) // 登陆
     })
-)(Login)
+)(Register)

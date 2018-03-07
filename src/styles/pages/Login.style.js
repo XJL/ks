@@ -41,6 +41,13 @@ export const styles = StyleSheet.create({
     loginButton: {
         backgroundColor: '#bc9956',
         marginHorizontal: 10,
-        marginVertical: 5
+        marginTop: 30,
+        marginBottom: 10
     },
+    optRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: 'space-between',
+        paddingHorizontal: 15
+    }
 });

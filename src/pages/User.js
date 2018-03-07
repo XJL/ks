@@ -26,7 +26,7 @@ class User extends Component {
     async logout() {
         try {
             // await this.props.logout();
-            this.props.navigator.popToTop();
+            this.props.navigator.resetTo({location: '/'});
         }
         catch (error) {
             this.setState({error: error.message});
