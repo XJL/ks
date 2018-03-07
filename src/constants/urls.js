@@ -3,8 +3,8 @@ export const host = `http://fd.ksglxt.com`;
 
 export const sendCode = "imageCode";
 
-export const login = "personalLogin";
+export const login = "manager/personalLogin";
 
-export const register = "insertpersonalInfo";
+export const register = "manager/insertpersonalInfo";
 
-export const logout = "loginToOut";
+export const logout = "manager/loginToOut";

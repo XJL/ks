@@ -6,6 +6,7 @@ import {
     Text,
     View,
     Image,
+    TouchableOpacity
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import {connect} from 'react-redux';
@@ -13,12 +14,11 @@ import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
 import TextBox from '../components/TextBox';
 import Button from '../components/Button';
-import CountDown from '../components/CountDown';
 import NavBar from '../components/NavBar';
 import {NormalButton} from '../components/ButtonSet';
 import {AppImage} from '../resource/AppImage';
 
-import {login, sendCode} from '../modules/redux/modules/auth';
+import {register, sendCode} from '../modules/redux/modules/auth';
 
 class Register extends Component {
     constructor(props) {
@@ -28,7 +28,7 @@ class Register extends Component {
             input_pwd: "",
             input_code: "",
             error: "",
-            waiting: true
+            waiting: false
         };
 
         this.toastLongOptions = {
@@ -52,22 +52,25 @@ class Register extends Component {
 
     // 发送短信验证码
     async sendCode() {
-        this.props.sendCode();
+        try {
+            await this.props.sendCode();
+        }
+        catch (error) {
+            this.toastShort(error.message);
+        }
     }
 
     // 登陆
-    async login() {
+    async register() {
         if(this.verify()) {
             const data = {
-                username: this.state.input_user,
+                telephone: this.state.input_user,
                 password: this.state.input_pwd,
                 changeCode: this.state.input_code
             };
             try {
-                // await this.props.login(data);
-                this.props.navigator.replace({
-                    location: '/splashScreen'
-                });
+                await this.props.register(data);
+                this.props.navigator.pop();
             }
             catch (error) {
                 this.toastLong(error.message);
@@ -101,16 +104,6 @@ class Register extends Component {
     toastShort(msg) {
         this.toast && this.toast.destroy();
         this.toast = Toast.show(msg, this.toastShortOptions);
-    }
-
-    // 去忘记密码页面
-    goForget() {
-
-    }
-
-    // 去注册页面
-    goRegister() {
-
     }
 
     render() {
@@ -166,12 +159,13 @@ class Register extends Component {
                         onChangeText={input_code=>this.setState({input_code, error: ""})}
                         renderController={()=>{
                             return (
-                                <CountDown
-                                    text="获取验证码"
-                                    style={styles.countDown}
-                                    disableStyle={styles.countDownDisable}
+                                <TouchableOpacity
+                                    style={{width:150, height: 70}}
+                                    activeOpacity={1}
                                     onPress={()=>this.sendCode()}
-                                />
+                                >
+                                    <Image source={{uri: this.props.codeContent && this.props.codeContent.img}} style={{width: 120, height: 50}}/>
+                                </TouchableOpacity>
                             );
                         }}
                     />
@@ -179,8 +173,8 @@ class Register extends Component {
                     <NormalButton
                         text="注册"
                         style={styles.loginButton}
-                        enable={this.state.input_user && this.state.input_pwd && this.state.input_code && this.state.waiting}
-                        onPress={()=>this.login()}
+                        enable={(this.state.input_user && this.state.input_pwd && this.state.input_code && !this.state.waiting)?true:false}
+                        onPress={()=>this.register()}
                     />
                 </InputScrollView>
             </View>
@@ -194,6 +188,6 @@ export default connect(
     }),
     dispatch=>({
         sendCode: ()=>dispatch(sendCode()), // 获取验证码
-        login: (data)=>dispatch(login(data)) // 登陆
+        register: (data)=>dispatch(register(data)) // 登陆
     })
 )(Register)

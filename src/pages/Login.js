@@ -6,6 +6,7 @@ import {
     Text,
     View,
     Image,
+    TouchableOpacity
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import {connect} from 'react-redux';
@@ -52,7 +53,12 @@ class Login extends Component {
 
     // 发送短信验证码
     async sendCode() {
-        this.props.sendCode();
+        try {
+            await this.props.sendCode();
+        }
+        catch (error) {
+            this.toastShort(error.message);
+        }
     }
 
     // 登陆
@@ -166,24 +172,21 @@ class Login extends Component {
                         onChangeText={input_code=>this.setState({input_code, error: ""})}
                         renderController={()=>{
                             return (
-                                <CountDown
-                                    text="获取短信验证码"
-                                    style={styles.countDown}
-                                    disableStyle={styles.countDownDisable}
+                                <TouchableOpacity
+                                    style={{width:120, height: 50}}
+                                    activeOpacity={1}
                                     onPress={()=>this.sendCode()}
-                                />
+                                >
+                                    <Image source={{uri: this.props.codeContent && this.props.codeContent.img}} style={{width: 120, height: 50}}/>
+                                </TouchableOpacity>
                             );
                         }}
                     />
 
-                    {
-                        // <Text style={styles.errorText}>{this.state.error}</Text>
-                    }
-
                     <NormalButton
                         text="登录"
                         style={styles.loginButton}
-                        enable={this.state.input_user && this.state.input_pwd && this.state.input_code && this.state.waiting}
+                        enable={(this.state.input_user && this.state.input_pwd && this.state.input_code && !this.state.waiting)?true:false}
                         onPress={()=>this.login()}
                     />
 

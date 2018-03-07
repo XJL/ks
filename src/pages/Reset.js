@@ -179,7 +179,7 @@ class Reset extends Component {
                     <NormalButton
                         text="确定"
                         style={styles.loginButton}
-                        enable={this.state.input_user && this.state.input_pwd && this.state.input_code && this.state.waiting}
+                        enable={(this.state.input_user && this.state.input_pwd && this.state.input_code && !this.state.waiting)?true:false}
                         onPress={()=>this.login()}
                     />
                 </InputScrollView>

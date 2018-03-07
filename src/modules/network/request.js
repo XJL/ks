@@ -66,7 +66,7 @@ async function request(urlKey, method, params = {}, format, token = '') {
     if (!url) {
         throw new Error('请求错误：地址不能为空');
     }
-    url = `${urls.host}/ks_manager/manager/${urlKey}.do`;
+    url = `${urls.host}/ks_manager/${urlKey}.do`;
 
     let options = {
         method: method,
@@ -115,18 +115,14 @@ async function request(urlKey, method, params = {}, format, token = '') {
                 throw new Error("Wrong json: " + json);
             }
 
-            if (jsonObj instanceof Array)
-            {
-                return jsonObj;
-            }
-            else if (jsonObj.type == null) {
-                return jsonObj;
-            }
-            else if (jsonObj.type == 0) {
-                // 成功返回整个json对象
+            if (jsonObj instanceof Array) {
                 return jsonObj;
             }
             else if (jsonObj.type == 1) {
+                // 成功返回整个json对象
+                return jsonObj;
+            }
+            else if (jsonObj.type == -1) {
                 if (jsonObj.msg) {
                     throw new Error(jsonObj.msg);
                 }

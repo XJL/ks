@@ -20,23 +20,23 @@ const ActonKey = {
 export default handleActions({
     [ActonKey.LOGIN]: (state, action) => ({
         ...state,
-        ...action
+        ...action.payload
     }),
     [ActonKey.LOGOUT]: (state, action) => ({
         ...state,
-        ...action
+        ...action.payload
     }),
     [ActonKey.CLEAR_CODE]: (state, action) => ({
         ...state,
-        ...action
+        ...action.payload
     }),
     [ActonKey.SEND_CODE]: (state, action) => ({
         ...state,
-        ...action
+        ...action.payload
     }),
     [ActonKey.REGISTER]: (state, action) => ({
         ...state,
-        ...action
+        ...action.payload
     }),
 }, initialState);
 
@@ -63,7 +63,6 @@ export function login(data) {
             // 登陆
             const rsp = await Request.apiPost(Request.URLs.login, requestData);
             dispatch(Action.loginAction({userInfo: rsp.returnMap}));
-            dispatch(Action.clearCodeAction({codeContent: null}));
         }
         catch (error) {
             throw error;
@@ -109,7 +108,6 @@ export function register(data) {
                 throw new Error("请先获取验证码");
             }
             await Request.apiPost(Request.URLs.register, requestData);
-            dispatch(Action.clearCodeAction({codeContent: null}));
         }
         catch (error) {
             throw error;
