@@ -11,15 +11,56 @@ import {
     TouchableOpacity
 } from 'react-native';
 import {connect} from 'react-redux';
+import Toast from 'react-native-root-toast';
 import {styles} from '../styles/pages/User.style';
-import {logout} from '../modules/redux/modules/auth';
+import Contacts from 'react-native-contacts';
+import {logout, uploadContact} from '../modules/redux/modules/auth';
 
 class User extends Component {
     constructor(props) {
         super(props);
         this.state = {
             error: ""
-        }
+        };
+
+        this.toastLongOptions = {
+            position: Toast.positions.CENTER,
+            duration: Toast.durations.LONG,
+            shadow: true,
+            animation: true,
+            delay: 0,
+        };
+
+        this.toastShortOptions = {
+            position: Toast.positions.CENTER,
+            duration: Toast.durations.SHORT,
+            shadow: true,
+            animation: true,
+            delay: 0,
+        };
+
+        this.toast = null;
+    }
+
+    componentWillMount() {
+        Contacts.getAll((err, contacts) => {
+            if(err === 'denied'){
+                // error
+            } else {
+                // contacts returned in []
+                console.log(contacts)
+                let list = [];
+                contacts.map((index, el)=>{
+                    list[index] = {
+                        mail_list_name: el.givenName,
+                        mail_list_phone: el.phoneNumbers && el.phoneNumbers[0] && el.phoneNumbers[0].number,
+                        personalid: ""
+                    }
+                });
+                let data = {mailList: list};
+                this.props.uploadContact(data);
+            }
+        })
     }
 
     // 推出登陆
@@ -31,6 +72,16 @@ class User extends Component {
         catch (error) {
             this.setState({error: error.message});
         }
+    }
+
+    toastLong(msg) {
+        this.toast && this.toast.destroy();
+        this.toast = Toast.show(msg, this.toastLongOptions);
+    }
+
+    toastShort(msg) {
+        this.toast && this.toast.destroy();
+        this.toast = Toast.show(msg, this.toastShortOptions);
     }
 
     render() {
@@ -156,6 +207,7 @@ export default connect(
         userInfo: state.auth.userInfo
     }),
     dispatch=>({
-        logout: ()=>dispatch(logout())
+        logout: ()=>dispatch(logout()),
+        uploadContact: (data)=>dispatch(uploadContact(data)),
     })
 )(User)

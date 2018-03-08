@@ -15,6 +15,7 @@ const ActonKey = {
     SEND_CODE: "/sendCode",
     REGISTER: "/register",
     LOGOUT: "/logout",
+    UPLOAD: "/upload",
 };
 
 export default handleActions({
@@ -38,6 +39,10 @@ export default handleActions({
         ...state,
         ...action.payload
     }),
+    [ActonKey.UPLOAD]: (state, action) => ({
+        ...state,
+        ...action.payload
+    }),
 }, initialState);
 
 export const Action = {
@@ -46,6 +51,7 @@ export const Action = {
     clearCodeAction: createAction(ActonKey.CLEAR_CODE),
     sendCodeAction: createAction(ActonKey.SEND_CODE),
     registerAction: createAction(ActonKey.REGISTER),
+    uploadAction: createAction(ActonKey.UPLOAD),
 };
 
 // 登陆
@@ -75,6 +81,7 @@ export function logout() {
         try {
             await Request.apiPost(Request.URLs.logout);
             dispatch(Action.logoutAction({userInfo: null}));
+            dispatch(Action.logoutAction({codeContent: null}));
         }
         catch (error) {
             throw error;
@@ -116,24 +123,16 @@ export function register(data) {
 }
 
 // 上报通讯录
-// export function uploadContact(data) {
-//     return async function (dispatch, getState) {
-//         try {
-//             const code = getState().auth.codeContent;
-//             let requestData = data;
-//             if(code) {
-//                 requestData.token = code.token;
-//             }
-//             else {
-//                 throw new Error("请先获取短信验证码");
-//             }
-//             await Request.apiPost(Request.URLs.register, requestData);
-//             dispatch(Action.clearCodeAction({codeContent: null}));
-//         }
-//         catch (error) {
-//             throw error;
-//         }
-//     }
-// }
+export function uploadContact(data) {
+    return async function (dispatch, getState) {
+        try {
+            let requestData = data;
+            await Request.apiPost(Request.URLs.register, requestData);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+}
 
 
