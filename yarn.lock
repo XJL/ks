@@ -2212,7 +2212,7 @@ inquirer@^3.0.6:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
-invariant@^2.0.0, invariant@^2.2.1, invariant@^2.2.2:
+invariant@^2.0.0, invariant@^2.1.0, invariant@^2.2.1, invariant@^2.2.2:
   version "2.2.3"
   resolved "http://registry.npm.taobao.org/invariant/download/invariant-2.2.3.tgz#1a827dfde7dcbd7c323f0ca826be8fa7c5e9d688"
   dependencies:
@@ -3700,6 +3700,12 @@ react-devtools-core@^2.5.0:
 react-native-contacts@^2.1.1:
   version "2.1.1"
   resolved "http://registry.npm.taobao.org/react-native-contacts/download/react-native-contacts-2.1.1.tgz#29e9132a3966e01026c761aa2fe6dc6254a2a84e"
+
+react-native-cookies@^3.2.0:
+  version "3.2.0"
+  resolved "http://registry.npm.taobao.org/react-native-cookies/download/react-native-cookies-3.2.0.tgz#1079d4d368bb287d1c8a93f3b9b60a4bde659966"
+  dependencies:
+    invariant "^2.1.0"
 
 react-native-deprecated-custom-components@^0.1.1:
   version "0.1.1"

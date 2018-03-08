@@ -73,7 +73,8 @@ async function request(urlKey, method, params = {}, format, token = '') {
         headers: {
             'Accept': 'application/json',
             'Content-Type': format === 'JSON' ? 'application/json' : 'application/x-www-form-urlencoded'
-        }
+        },
+        credentials: 'include'
     };
 
     if (token) {
