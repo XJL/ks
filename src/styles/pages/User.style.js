@@ -9,7 +9,7 @@ export var styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-
+        overflow: "hidden",
     },
     header_bg: {
         position: 'absolute',

@@ -106,8 +106,8 @@ class User extends Component {
                     // }
                 >
                     <View style={styles.header}>
-                        <LinearGradient 
-                            colors={['#4c669f', '#3b5998', '#192f6a']} 
+                        <LinearGradient
+                            colors={['#4c669f', '#3b5998', '#192f6a']}
                             style={styles.header_bg}
                         />
                         <Image source={AppImage.logo} style={styles.header_logo}/>

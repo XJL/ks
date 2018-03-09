@@ -15,9 +15,9 @@ export default class SplashScreen extends Component {
     }
 
     jump() {
-        this.props.navigator.replace({
+        this.props.navigator.resetTo({
             location: "/user"
-        })
+        });
     }
 
     render() {

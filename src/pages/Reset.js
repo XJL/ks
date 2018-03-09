@@ -6,14 +6,13 @@ import {
     Text,
     View,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    TextInput
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import {connect} from 'react-redux';
 import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
-import TextBox from '../components/TextBox';
-import Button from '../components/Button';
 import NavBar from '../components/NavBar';
 import {NormalButton} from '../components/ButtonSet';
 import {AppImage} from '../resource/AppImage';
@@ -28,7 +27,8 @@ class Reset extends Component {
             input_pwd: "",
             input_code: "",
             error: "",
-            waiting: false
+            waiting: false,
+            showPwd: false, //默认不显示密码
         };
 
         this.toastLongOptions = {
@@ -65,9 +65,7 @@ class Reset extends Component {
             };
             try {
                 // await this.props.login(data);
-                this.props.navigator.replace({
-                    location: '/splashScreen'
-                });
+                this.props.navigator.pop();
             }
             catch (error) {
                 this.toastLong(error.message);
@@ -117,7 +115,7 @@ class Reset extends Component {
         return (
             <View style={styles.container}>
                 <NavBar
-                    title={"忘记密码"}
+                    title={"找回密码"}
                     statusBar={{hidden: true}} // ios的状态栏才有效
                 />
                 <InputScrollView
@@ -125,60 +123,60 @@ class Reset extends Component {
                     onResponderRelease={()=>dismissKeyboard()}
                 >
                     <Image source={AppImage.logo} style={styles.logo}/>
-                    <TextBox
-                        style={styles.textBox}
-                        inputStyle={styles.inputStyle}
-                        placeholder="输入手机号码"
-                        value={this.state.input_user}
-                        keyboardType="numeric"
-                        onChangeText={input_user=>this.setState({input_user, error: ""})}
-                        renderController={()=>{
-                            return (
-                                <Button
-                                    icon={require('../resource/images/textbox_clear.png')}
-                                    onPress={()=>{ this.setState({input_user: ''}) }}
-                                />
-                            );
-                        }}
-                    />
 
-                    <TextBox
-                        style={styles.textBox}
-                        inputStyle={styles.inputStyle}
-                        placeholder="输入密码"
-                        value={this.state.input_pwd}
-                        keyboardType="numeric"
-                        onChangeText={input_pwd=>this.setState({input_pwd})}
-                        renderController={()=>{
-                            return (
-                                <Button
-                                    icon={require('../resource/images/textbox_clear.png')}
-                                    onPress={()=>{ this.setState({input_pwd: '', error: ""}) }}
-                                />
-                            );
-                        }}
-                    />
-                    {
-                        <TextBox
-                            style={styles.textBox}
-                            inputStyle={styles.inputStyle}
-                            placeholder="输入验证码"
+                    <View style={styles.text_box}>
+                        <TextInput
+                            style={styles.text_box_text}
+                            underlineColorAndroid="transparent"
+                            placeholder="请输入手机号"
+                            placeholderTextColor="#999999"
+                            value={this.state.input_user}
+                            keyboardType="numeric"
+                            onChangeText={input_user=>this.setState({input_user, error: ""})}
+                        />
+                    </View>
+                    <View style={[styles.text_box, styles.text_box_gap_top]}>
+                        <TextInput
+                            style={styles.text_box_text}
+                            underlineColorAndroid="transparent"
+                            placeholder="请输入密码"
+                            placeholderTextColor="#999999"
+                            value={this.state.input_pwd}
+                            secureTextEntry={!this.state.showPwd}
+                            keyboardType="default"
+                            onChangeText={input_pwd=>this.setState({input_pwd})}
+                        />
+                        <TouchableOpacity
+                            style={styles.text_box_controller}
+                            activeOpacity={0.9}
+                            onPress={()=>this.togglePwd()}
+                        >
+                            <Text style={styles.text_box_controller_text}>
+                                {this.state.showPwd ? "隐藏密码" : "显示密码"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.text_box, styles.text_box_gap_top]}>
+                        <TextInput
+                            style={styles.text_box_text}
+                            underlineColorAndroid="transparent"
+                            placeholder="请输入验证码"
+                            placeholderTextColor="#999999"
                             value={this.state.input_code}
                             keyboardType="numeric"
                             onChangeText={input_code=>this.setState({input_code, error: ""})}
-                            renderController={()=>{
-                                return (
-                                    <TouchableOpacity
-                                        style={{width:120, height: 50}}
-                                        activeOpacity={1}
-                                        onPress={()=>this.sendCode()}
-                                    >
-                                        <Image source={{uri: this.props.codeContent && this.props.codeContent.img}} style={{width: 120, height: 50}}/>
-                                    </TouchableOpacity>
-                                );
-                            }}
                         />
-                    }
+                        <TouchableOpacity
+                            style={[styles.text_box_controller, styles.pic_code]}
+                            activeOpacity={0.9}
+                            onPress={()=>this.sendCode()}
+                        >
+                            <Image
+                                source={{uri: this.props.codeContent && this.props.codeContent.img}}
+                                style={styles.pic_code}
+                            />
+                        </TouchableOpacity>
+                    </View>
 
                     <NormalButton
                         text="确定"
