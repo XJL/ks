@@ -6,6 +6,7 @@ import {
     Text,
     View,
     Image,
+    TouchableOpacity
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import {connect} from 'react-redux';
@@ -13,7 +14,6 @@ import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
 import TextBox from '../components/TextBox';
 import Button from '../components/Button';
-import CountDown from '../components/CountDown';
 import NavBar from '../components/NavBar';
 import {NormalButton} from '../components/ButtonSet';
 import {AppImage} from '../resource/AppImage';
@@ -141,6 +141,7 @@ class Reset extends Component {
                             );
                         }}
                     />
+
                     <TextBox
                         style={styles.textBox}
                         inputStyle={styles.inputStyle}
@@ -157,24 +158,27 @@ class Reset extends Component {
                             );
                         }}
                     />
-                    <TextBox
-                        style={styles.textBox}
-                        inputStyle={styles.inputStyle}
-                        placeholder="输入验证码"
-                        value={this.state.input_code}
-                        keyboardType="numeric"
-                        onChangeText={input_code=>this.setState({input_code, error: ""})}
-                        renderController={()=>{
-                            return (
-                                <CountDown
-                                    text="获取短信验证码"
-                                    style={styles.countDown}
-                                    disableStyle={styles.countDownDisable}
-                                    onPress={()=>this.sendCode()}
-                                />
-                            );
-                        }}
-                    />
+                    {
+                        <TextBox
+                            style={styles.textBox}
+                            inputStyle={styles.inputStyle}
+                            placeholder="输入验证码"
+                            value={this.state.input_code}
+                            keyboardType="numeric"
+                            onChangeText={input_code=>this.setState({input_code, error: ""})}
+                            renderController={()=>{
+                                return (
+                                    <TouchableOpacity
+                                        style={{width:120, height: 50}}
+                                        activeOpacity={1}
+                                        onPress={()=>this.sendCode()}
+                                    >
+                                        <Image source={{uri: this.props.codeContent && this.props.codeContent.img}} style={{width: 120, height: 50}}/>
+                                    </TouchableOpacity>
+                                );
+                            }}
+                        />
+                    }
 
                     <NormalButton
                         text="确定"

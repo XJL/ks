@@ -135,4 +135,24 @@ export function uploadContact(data) {
     }
 }
 
+// 上报通讯录
+export function reset(data) {
+    return async function (dispatch, getState) {
+        try {
+            const code = getState().auth.codeContent;
+            let requestData = data;
+            if(code) {
+                requestData.token = code.token;
+            }
+            else {
+                throw new Error("请先获取验证码");
+            }
+            await Request.apiPost(Request.URLs.reset, requestData);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+}
+
 

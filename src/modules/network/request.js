@@ -66,7 +66,7 @@ async function request(urlKey, method, params = {}, format, token = '') {
     if (!url) {
         throw new Error('请求错误：地址不能为空');
     }
-    url = `${urls.host}/ks_manager/${urlKey}.do`;
+    url = `${urls.host}/ks_manager/${urlKey}`;
 
     let options = {
         method: method,
