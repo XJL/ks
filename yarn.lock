@@ -3743,6 +3743,12 @@ react-native-inputscrollview@^2.0.1:
   dependencies:
     semver "^5.1.0"
 
+react-native-linear-gradient@^2.4.0:
+  version "2.4.0"
+  resolved "http://registry.npm.taobao.org/react-native-linear-gradient/download/react-native-linear-gradient-2.4.0.tgz#51d8ea12bb72a59bede9edc87b694b16b64cf435"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-navbar@^2.1.0:
   version "2.1.0"
   resolved "http://registry.npm.taobao.org/react-native-navbar/download/react-native-navbar-2.1.0.tgz#4f21e947501ce5cf4563a29914cb3192db35a647"
