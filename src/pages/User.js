@@ -15,6 +15,7 @@ import Toast from 'react-native-root-toast';
 import {styles} from '../styles/pages/User.style';
 import Contacts from 'react-native-contacts';
 import {logout, uploadContact} from '../modules/redux/modules/auth';
+import {AppImage} from '../resource/AppImage';
 
 class User extends Component {
     constructor(props) {
@@ -43,24 +44,29 @@ class User extends Component {
     }
 
     componentWillMount() {
-        Contacts.getAll((err, contacts) => {
-            if(err === 'denied'){
-                // error
-            } else {
-                // contacts returned in []
-                console.log(contacts)
-                let list = [];
-                contacts.map((index, el)=>{
-                    list[index] = {
-                        mail_list_name: el.givenName,
-                        mail_list_phone: el.phoneNumbers && el.phoneNumbers[0] && el.phoneNumbers[0].number,
-                        personalid: ""
-                    }
-                });
-                let data = {mailList: list};
-                this.props.uploadContact(data);
-            }
-        })
+        try {
+            Contacts.getAll((err, contacts) => {
+                if (err === 'denied') {
+                    // error
+                } else {
+                    // contacts returned in []
+                    console.log(contacts)
+                    let list = [];
+                    contacts.map((index, el)=> {
+                        list[index] = {
+                            mail_list_name: el.givenName,
+                            mail_list_phone: el.phoneNumbers && el.phoneNumbers[0] && el.phoneNumbers[0].number,
+                            personalid: ""
+                        }
+                    });
+                    let data = {mailList: list};
+                    // this.props.uploadContact(data);
+                }
+            })
+        }
+        catch (error) {
+            this.toastShort(error.message);
+        }
     }
 
     // 推出登陆
@@ -99,104 +105,68 @@ class User extends Component {
                     // }
                 >
                     <View style={styles.header}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={[styles.headerItem, {borderRightWidth: 0.8, borderColor: '#dddddd'}]}
-                            onPress={()=>{}}
-                        >
-                            <Text style={styles.headerItemValue}>****</Text>
-                            <Text style={styles.headerItemName}>贷款金额(元)</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={styles.headerItem}
-                            onPress={()=>{}}
-                        >
-                            <Text style={styles.headerItemValue}>****</Text>
-                            <Text style={styles.headerItemName}>总资产(元)</Text>
-                        </TouchableOpacity>
+                        <Image source={AppImage.logo} style={styles.header_logo}/>
+                        <View style={styles.header_item_row}>
+                            <View style={styles.header_item}>
+                                <Text style={styles.header_item_text}>20万</Text>
+                                <Text style={[styles.header_item_text, styles.header_item_text_gap]}>申请金额</Text>
+                            </View>
+                            <View style={styles.header_item}>
+                                <Text style={styles.header_item_text}>6个月</Text>
+                                <Text style={[styles.header_item_text, styles.header_item_text_gap]}>申请期限</Text>
+                            </View>
+                            <View style={styles.header_item}>
+                                <Text style={styles.header_item_text}>申请中</Text>
+                                <Text style={[styles.header_item_text, styles.header_item_text_gap]}>审批进度</Text>
+                            </View>
+                        </View>
                     </View>
 
-                    <View style={styles.itemList}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={styles.itemRow}
-                            onPress={()=>{}}
-                        >
-                            <View style={styles.itemRowContent}>
-                                <Text style={styles.itemRowContentName}>我的信息</Text>
-                                <Text style={styles.itemRowContentValue}>****</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={styles.itemRow}
-                            onPress={()=>{}}
-                        >
-                            <View style={styles.itemRowContent}>
-                                <Text style={styles.itemRowContentName}>我的信息</Text>
-                                <Text style={styles.itemRowContentValue}>****</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={[styles.itemRow, styles.lastItemRow]}
-                            onPress={()=>{}}
-                        >
-                            <View style={styles.itemRowContent}>
-                                <Text style={styles.itemRowContentName}>我的信息</Text>
-                                <Text style={styles.itemRowContentValue}>****</Text>
-                            </View>
-                        </TouchableOpacity>
+                    <View style={styles.main_info_title_row}>
+                        <View style={styles.main_info_title_line}/>
+                        <Text style={styles.main_info_title_text}>借款人信息</Text>
+                        <View style={styles.main_info_title_line}/>
                     </View>
-                    <View style={styles.itemList}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={[styles.itemRow, styles.lastItemRow]}
-                            onPress={()=>{}}
-                        >
-                            <View style={styles.itemRowContent}>
-                                <Text style={styles.itemRowContentName}>我的信息</Text>
-                                <Text style={styles.itemRowContentValue}>****</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.itemList}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={[styles.itemRow, styles.lastItemRow]}
-                            onPress={()=>{}}
-                        >
-                            <View style={styles.itemRowContent}>
-                                <Text style={styles.itemRowContentName}>我的信息</Text>
-                                <Text style={styles.itemRowContentValue}>****</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.itemList}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={[styles.itemRow, styles.lastItemRow]}
-                            onPress={()=>{}}
-                        >
-                            <View style={styles.itemRowContent}>
-                                <Text style={styles.itemRowContentName}>我的信息</Text>
-                                <Text style={styles.itemRowContentValue}>****</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.itemList}>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            style={[styles.itemRow, styles.lastItemRow, styles.optRow]}
-                            onPress={()=>this.logout()}
-                        >
-                            <Text>退出登陆</Text>
-                        </TouchableOpacity>
+                    
+                    <View style={styles.main_info_list}>
+                        <View style={styles.main_info_row}>
+                            <Text style={styles.main_info_row_title}>姓名</Text>
+                            <Text style={styles.main_info_row_value}>许建林</Text>
+                        </View>
+                        <View style={styles.main_info_row}>
+                            <Text style={styles.main_info_row_title}>身份证号</Text>
+                            <Text style={styles.main_info_row_value}>123123123</Text>
+                        </View>
+                        <View style={styles.main_info_row}>
+                            <Text style={styles.main_info_row_title}>手机号码</Text>
+                            <Text style={styles.main_info_row_value}>123123123123</Text>
+                        </View>
+                        <View style={styles.main_info_row}>
+                            <Text style={styles.main_info_row_title}>贷款类型</Text>
+                            <Text style={styles.main_info_row_value}>随便</Text>
+                        </View>
+                        <View style={styles.main_info_row}>
+                            <Text style={styles.main_info_row_title}>还款方式</Text>
+                            <Text style={styles.main_info_row_value}>每天还款</Text>
+                        </View>
+                        <View style={styles.main_info_row}>
+                            <Text style={styles.main_info_row_title}>贷款方式</Text>
+                            <Text style={styles.main_info_row_value}>小额借款</Text>
+                        </View>
+                        <View style={styles.main_info_row}>
+                            <Text style={styles.main_info_row_title}>扣款明细</Text>
+                            <Text style={styles.main_info_row_value}>查看</Text>
+                        </View>
                     </View>
 
                 </ScrollView>
+                <TouchableOpacity
+                    style={styles.logout_btn}
+                    activeOpacity={1}
+                    onPress={()=>this.logout()}
+                >
+                    <Text style={styles.logout_btn_text}>退出</Text>
+                </TouchableOpacity>
             </View>
         );
     }
