@@ -77,7 +77,7 @@ class User extends Component {
             await this.props.uploadContact(data);
         }
         catch (error) {
-            this.toastShort(error.message);
+            // this.toastShort(error.message);
         }
     }
 
