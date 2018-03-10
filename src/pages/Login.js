@@ -9,7 +9,6 @@ import {
     TouchableOpacity,
     TextInput
 } from 'react-native';
-import Toast from 'react-native-root-toast';
 import {connect} from 'react-redux';
 import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
@@ -17,6 +16,7 @@ import NavBar from '../components/NavBar';
 import {AppImage} from '../resource/AppImage';
 import {login, sendCode} from '../modules/redux/modules/auth';
 import RegexsUtils from '../utils/RegexsUtils';
+import ToastUtils from '../utils/ToastUtils';
 
 class Login extends Component {
     constructor(props) {
@@ -29,24 +29,6 @@ class Login extends Component {
             waiting: false,
             showPwd: false, //默认不显示密码
         };
-
-        this.toastLongOptions = {
-            position: Toast.positions.CENTER,
-            duration: Toast.durations.LONG,
-            shadow: true,
-            animation: true,
-            delay: 0,
-        };
-
-        this.toastShortOptions = {
-            position: Toast.positions.CENTER,
-            duration: Toast.durations.SHORT,
-            shadow: true,
-            animation: true,
-            delay: 0,
-        };
-
-        this.toast = null;
     }
 
     componentDidMount() {
@@ -59,7 +41,7 @@ class Login extends Component {
             await this.props.sendCode();
         }
         catch (error) {
-            this.toastShort(error.message);
+            ToastUtils.toastShort(error.message);
         }
     }
 
@@ -74,11 +56,11 @@ class Login extends Component {
             };
             try {
                 await this.props.login(data);
-                this.toastLong("登陆成功");
+                ToastUtils.toastLong("登陆成功");
                 this.props.navigator.resetTo({location: '/user'});
             }
             catch (error) {
-                this.toastLong(error.message);
+                ToastUtils.toastLong(error.message);
             }
             this.setState({waiting: false});
         }
@@ -89,39 +71,29 @@ class Login extends Component {
         let result = true;
         if(this.state.input_user == "") {
             result = false;
-            this.toastShort("请输入手机号码");
+            ToastUtils.toastShort("请输入手机号码");
         }
         else if(!RegexsUtils.phoneNum.test(this.state.input_user)) {
             result = false;
-            this.toastShort("手机号码格式错误");
+            ToastUtils.toastShort("手机号码格式错误");
         }
         else if(this.state.input_pwd == "") {
             result = false;
-            this.toastShort("请输入密码");
+            ToastUtils.toastShort("请输入密码");
         }
         else if(!RegexsUtils.password.test(this.state.input_pwd)) {
             result = false;
-            this.toastShort("密码格式错误");
+            ToastUtils.toastShort("密码格式错误");
         }
         else if(this.state.input_code == "") {
             result = false;
-            this.toastShort("请输入验证码");
+            ToastUtils.toastShort("请输入验证码");
         }
         else if(!RegexsUtils.imageCode.test(this.state.input_code)) {
             result = false;
-            this.toastShort("验证码格式错误");
+            ToastUtils.toastShort("验证码格式错误");
         }
         return result;
-    }
-
-    toastLong(msg) {
-        this.toast && this.toast.destroy();
-        this.toast = Toast.show(msg, this.toastLongOptions);
-    }
-
-    toastShort(msg) {
-        this.toast && this.toast.destroy();
-        this.toast = Toast.show(msg, this.toastShortOptions);
     }
 
     // 去忘记密码页面
@@ -216,7 +188,7 @@ class Login extends Component {
                         <Text style={styles.login_button_text}>登陆</Text>
                     </TouchableOpacity>
 
-                    < View style={styles.optRow}>
+                    <View style={styles.optRow}>
                         <Text
                             style={styles.opt_row_text}
                             onPress={()=>this.goRegister()}

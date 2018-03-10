@@ -9,7 +9,7 @@ import {
     TouchableOpacity,
     TextInput
 } from 'react-native';
-import Toast from 'react-native-root-toast';
+import ToastUtils from '../utils/ToastUtils';
 import {connect} from 'react-redux';
 import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
@@ -30,24 +30,6 @@ class Register extends Component {
             waiting: false,
             showPwd: false, //默认不显示密码
         };
-
-        this.toastLongOptions = {
-            position: Toast.positions.CENTER,
-            duration: Toast.durations.LONG,
-            shadow: true,
-            animation: true,
-            delay: 0,
-        };
-
-        this.toastShortOptions = {
-            position: Toast.positions.CENTER,
-            duration: Toast.durations.SHORT,
-            shadow: true,
-            animation: true,
-            delay: 0,
-        };
-
-        this.toast = null;
     }
 
     componentDidMount() {
@@ -60,7 +42,7 @@ class Register extends Component {
             await this.props.sendCode();
         }
         catch (error) {
-            this.toastShort(error.message);
+            ToastUtils.toastShort(error.message);
         }
     }
 
@@ -80,10 +62,11 @@ class Register extends Component {
             };
             try {
                 await this.props.register(data);
+                ToastUtils.toastLong("注册成功");
                 this.props.navigator.resetTo({location: '/'});
             }
             catch (error) {
-                this.toastLong(error.message);
+                ToastUtils.toastLong(error.message);
             }
             this.setState({waiting: false});
         }
@@ -94,39 +77,29 @@ class Register extends Component {
         let result = true;
         if(this.state.input_user == "") {
             result = false;
-            this.toastShort("请输入手机号码");
+            ToastUtils.toastShort("请输入手机号码");
         }
         else if(!RegexsUtils.phoneNum.test(this.state.input_user)) {
             result = false;
-            this.toastShort("手机号码格式错误");
+            ToastUtils.toastShort("手机号码格式错误");
         }
         else if(this.state.input_pwd == "") {
             result = false;
-            this.toastShort("请输入密码");
+            ToastUtils.toastShort("请输入密码");
         }
         else if(!RegexsUtils.password.test(this.state.input_pwd)) {
             result = false;
-            this.toastShort("密码格式错误");
+            ToastUtils.toastShort("密码格式错误");
         }
         else if(this.state.input_code == "") {
             result = false;
-            this.toastShort("请输入验证码");
+            ToastUtils.toastShort("请输入验证码");
         }
         else if(!RegexsUtils.imageCode.test(this.state.input_code)) {
             result = false;
-            this.toastShort("验证码格式错误");
+            ToastUtils.toastShort("验证码格式错误");
         }
         return result;
-    }
-
-    toastLong(msg) {
-        this.toast && this.toast.destroy();
-        this.toast = Toast.show(msg, this.toastLongOptions);
-    }
-
-    toastShort(msg) {
-        this.toast && this.toast.destroy();
-        this.toast = Toast.show(msg, this.toastShortOptions);
     }
 
     render() {

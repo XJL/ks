@@ -10,7 +10,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 import {connect} from 'react-redux';
-import Toast from 'react-native-root-toast';
+import ToastUtils from '../utils/ToastUtils';
 import {styles} from '../styles/pages/User.style';
 import Contacts from 'react-native-contacts';
 import {logout, uploadContact} from '../modules/redux/modules/auth';
@@ -23,29 +23,9 @@ class User extends Component {
         this.state = {
             error: ""
         };
-
-        this.toastLongOptions = {
-            position: Toast.positions.CENTER,
-            duration: Toast.durations.LONG,
-            shadow: true,
-            animation: true,
-            delay: 0,
-        };
-
-        this.toastShortOptions = {
-            position: Toast.positions.CENTER,
-            duration: Toast.durations.SHORT,
-            shadow: true,
-            animation: true,
-            delay: 0,
-        };
-
-        this.toast = null;
     }
 
     componentWillMount() {
-        console.log(this.props.userInfo);
-
         try {
             Contacts.getAll((err, contacts) => {
                 if (err === 'denied') {
@@ -67,7 +47,7 @@ class User extends Component {
             });
         }
         catch (error) {
-            this.toastShort(error.message);
+            ToastUtils.toastShort(error.message);
         }
     }
 
@@ -77,7 +57,7 @@ class User extends Component {
             await this.props.uploadContact(data);
         }
         catch (error) {
-            // this.toastShort(error.message);
+            // ToastUtils.toastShort(error.message);
         }
     }
 
@@ -85,21 +65,12 @@ class User extends Component {
     async logout() {
         try {
             await this.props.logout();
+            ToastUtils.toastLong("已退出登陆");
             this.props.navigator.resetTo({location: '/'});
         }
         catch (error) {
             this.setState({error: error.message});
         }
-    }
-
-    toastLong(msg) {
-        this.toast && this.toast.destroy();
-        this.toast = Toast.show(msg, this.toastLongOptions);
-    }
-
-    toastShort(msg) {
-        this.toast && this.toast.destroy();
-        this.toast = Toast.show(msg, this.toastShortOptions);
     }
 
     render() {
