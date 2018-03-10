@@ -57,7 +57,7 @@ class Reset extends Component {
             };
             try {
                 await this.props.reset(data);
-                this.props.navigator.pop();
+                this.props.navigator.resetTo({location: '/'});
             }
             catch (error) {
                 this.toastLong(error.message);

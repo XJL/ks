@@ -79,8 +79,6 @@ class Register extends Component {
             try {
                 await this.props.register(data);
                 this.props.navigator.resetTo({location: '/'});
-                // 用于刷新登陆页的图片验证码
-                this.sendCode();
             }
             catch (error) {
                 this.toastLong(error.message);
