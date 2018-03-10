@@ -109,7 +109,9 @@ async function request(urlKey, method, params = {}, format, token = '') {
             if (__DEV__ && !/heartBeat/.test(url)) {
                 // console.log(`RESP ${json}`);
             }
-
+            if( json.length == 0 ){
+                return {};
+            }
             let jsonObj = JSON.parse(json);
             if (!jsonObj) {
                 throw new Error("Wrong json: " + json);

@@ -77,8 +77,8 @@ export function logout() {
     return async function (dispatch, getState) {
         try {
             await Request.apiPost(Request.URLs.logout);
-            dispatch(Action.logoutAction({userInfo: null}));
-            dispatch(Action.logoutAction({codeContent: null}));
+            // dispatch(Action.logoutAction({userInfo: null}));
+            // dispatch(Action.logoutAction({codeContent: null}));
         }
         catch (error) {
             throw error;
