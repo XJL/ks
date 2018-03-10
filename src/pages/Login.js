@@ -16,6 +16,7 @@ import InputScrollView from '../components/InputScrollView';
 import NavBar from '../components/NavBar';
 import {AppImage} from '../resource/AppImage';
 import {login, sendCode} from '../modules/redux/modules/auth';
+import RegexsUtils from '../utils/RegexsUtils';
 
 class Login extends Component {
     constructor(props) {
@@ -90,13 +91,25 @@ class Login extends Component {
             result = false;
             this.toastShort("请输入手机号码");
         }
+        else if(!RegexsUtils.phoneNum.test(this.state.input_user)) {
+            result = false;
+            this.toastShort("手机号码格式错误");
+        }
         else if(this.state.input_pwd == "") {
             result = false;
             this.toastShort("请输入密码");
         }
+        else if(!RegexsUtils.password.test(this.state.input_pwd)) {
+            result = false;
+            this.toastShort("密码格式错误");
+        }
         else if(this.state.input_code == "") {
             result = false;
             this.toastShort("请输入验证码");
+        }
+        else if(!RegexsUtils.imageCode.test(this.state.input_code)) {
+            result = false;
+            this.toastShort("验证码格式错误");
         }
         return result;
     }
@@ -155,11 +168,11 @@ class Login extends Component {
                         <TextInput
                             style={styles.text_box_text}
                             underlineColorAndroid="transparent"
-                            placeholder="请输入密码"
+                            placeholder="请输入6位数字密码"
                             placeholderTextColor="#999999"
                             value={this.state.input_pwd}
                             secureTextEntry={!this.state.showPwd}
-                            keyboardType="default"
+                            keyboardType="numeric"
                             onChangeText={input_pwd=>this.setState({input_pwd})}
                         />
                         <TouchableOpacity

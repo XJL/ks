@@ -15,6 +15,7 @@ import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
 import NavBar from '../components/NavBar';
 import {AppImage} from '../resource/AppImage';
+import RegexsUtils from '../utils/RegexsUtils';
 
 import {reset} from '../modules/redux/modules/auth';
 
@@ -48,9 +49,10 @@ class Reset extends Component {
         this.toast = null;
     }
 
-    // 登陆
-    async logout() {
+    // 确定重置
+    async confirm() {
         if(this.verify()) {
+            this.setState({waiting: true});
             const data = {
                 username: this.state.input_user,
                 password: this.state.input_pwd,
@@ -62,6 +64,7 @@ class Reset extends Component {
             catch (error) {
                 this.toastLong(error.message);
             }
+            this.setState({waiting: false});
         }
     }
 
@@ -72,9 +75,17 @@ class Reset extends Component {
             result = false;
             this.toastShort("请输入手机号码");
         }
+        else if(!RegexsUtils.phoneNum.test(this.state.input_user)) {
+            result = false;
+            this.toastShort("手机号码格式错误");
+        }
         else if(this.state.input_pwd == "") {
             result = false;
             this.toastShort("请输入密码");
+        }
+        else if(!RegexsUtils.password.test(this.state.input_pwd)) {
+            result = false;
+            this.toastShort("密码格式错误");
         }
         return result;
     }
@@ -126,11 +137,11 @@ class Reset extends Component {
                         <TextInput
                             style={styles.text_box_text}
                             underlineColorAndroid="transparent"
-                            placeholder="请输入密码"
+                            placeholder="请输入6位数字密码"
                             placeholderTextColor="#999999"
                             value={this.state.input_pwd}
                             secureTextEntry={!this.state.showPwd}
-                            keyboardType="default"
+                            keyboardType="numeric"
                             onChangeText={input_pwd=>this.setState({input_pwd})}
                         />
                         <TouchableOpacity
@@ -148,7 +159,7 @@ class Reset extends Component {
                         style={[styles.login_btn, !btnCanPress && styles.login_btn_disabled]}
                         activeOpacity={1}
                         disabled={!btnCanPress}
-                        onPress={()=>this.logout()}
+                        onPress={()=>this.confirm()}
                     >
                         <Text style={styles.login_button_text}>确定</Text>
                     </TouchableOpacity>
@@ -163,7 +174,6 @@ export default connect(
 
     }),
     dispatch=>({
-        sendCode: ()=>dispatch(sendCode()), // 获取验证码
-        reset: (data)=>dispatch(reset(data)) // 登陆
+        reset: (data)=>dispatch(reset(data)) // 重置
     })
 )(Reset)

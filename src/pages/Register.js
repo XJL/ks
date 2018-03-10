@@ -15,6 +15,7 @@ import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
 import NavBar from '../components/NavBar';
 import {AppImage} from '../resource/AppImage';
+import RegexsUtils from '../utils/RegexsUtils';
 
 import {register, sendCode} from '../modules/redux/modules/auth';
 
@@ -68,9 +69,10 @@ class Register extends Component {
         this.setState({showPwd: !this.state.showPwd});
     }
 
-    // 登陆
+    // 注册
     async register() {
         if(this.verify()) {
+            this.setState({waiting: true});
             const data = {
                 telephone: this.state.input_user,
                 password: this.state.input_pwd,
@@ -83,6 +85,7 @@ class Register extends Component {
             catch (error) {
                 this.toastLong(error.message);
             }
+            this.setState({waiting: false});
         }
     }
 
@@ -93,13 +96,25 @@ class Register extends Component {
             result = false;
             this.toastShort("请输入手机号码");
         }
+        else if(!RegexsUtils.phoneNum.test(this.state.input_user)) {
+            result = false;
+            this.toastShort("手机号码格式错误");
+        }
         else if(this.state.input_pwd == "") {
             result = false;
             this.toastShort("请输入密码");
         }
+        else if(!RegexsUtils.password.test(this.state.input_pwd)) {
+            result = false;
+            this.toastShort("密码格式错误");
+        }
         else if(this.state.input_code == "") {
             result = false;
             this.toastShort("请输入验证码");
+        }
+        else if(!RegexsUtils.imageCode.test(this.state.input_code)) {
+            result = false;
+            this.toastShort("验证码格式错误");
         }
         return result;
     }
@@ -146,11 +161,11 @@ class Register extends Component {
                         <TextInput
                             style={styles.text_box_text}
                             underlineColorAndroid="transparent"
-                            placeholder="请输入密码"
+                            placeholder="请输入6位数字密码"
                             placeholderTextColor="#999999"
                             value={this.state.input_pwd}
                             secureTextEntry={!this.state.showPwd}
-                            keyboardType="default"
+                            keyboardType="numeric"
                             onChangeText={input_pwd=>this.setState({input_pwd})}
                         />
                         <TouchableOpacity
@@ -205,6 +220,6 @@ export default connect(
     }),
     dispatch=>({
         sendCode: ()=>dispatch(sendCode()), // 获取验证码
-        register: (data)=>dispatch(register(data)) // 登陆
+        register: (data)=>dispatch(register(data)) // 注册
     })
 )(Register)
