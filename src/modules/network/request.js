@@ -74,7 +74,6 @@ async function request(urlKey, method, params = {}, format, token = '') {
             'Accept': 'application/json',
             'Content-Type': format === 'JSON' ? 'application/json' : 'application/x-www-form-urlencoded'
         },
-        credentials: 'include'
     };
 
     if (token) {
@@ -130,6 +129,11 @@ async function request(urlKey, method, params = {}, format, token = '') {
                 else {
                     throw new Error('未知错误');
                 }
+            }
+            // 已经上报过，这个前端当成功处理
+            else if(jsonObj.type == 2) {
+                // 成功返回整个json对象
+                return jsonObj;
             }
             else {
                 if (jsonObj.msg) {

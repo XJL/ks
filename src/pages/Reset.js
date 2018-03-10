@@ -14,10 +14,9 @@ import {connect} from 'react-redux';
 import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
 import NavBar from '../components/NavBar';
-import {NormalButton} from '../components/ButtonSet';
 import {AppImage} from '../resource/AppImage';
 
-import {login, sendCode} from '../modules/redux/modules/auth';
+import {reset} from '../modules/redux/modules/auth';
 
 class Reset extends Component {
     constructor(props) {
@@ -25,7 +24,6 @@ class Reset extends Component {
         this.state = {
             input_user: "",
             input_pwd: "",
-            input_code: "",
             error: "",
             waiting: false,
             showPwd: false, //默认不显示密码
@@ -50,21 +48,15 @@ class Reset extends Component {
         this.toast = null;
     }
 
-    // 发送短信验证码
-    async sendCode() {
-        this.props.sendCode();
-    }
-
     // 登陆
-    async login() {
+    async logout() {
         if(this.verify()) {
             const data = {
                 username: this.state.input_user,
                 password: this.state.input_pwd,
-                changeCode: this.state.input_code
             };
             try {
-                // await this.props.login(data);
+                await this.props.reset(data);
                 this.props.navigator.pop();
             }
             catch (error) {
@@ -84,10 +76,6 @@ class Reset extends Component {
             result = false;
             this.toastShort("请输入密码");
         }
-        else if(this.state.input_code == "") {
-            result = false;
-            this.toastShort("请输入验证码");
-        }
         return result;
     }
 
@@ -101,22 +89,21 @@ class Reset extends Component {
         this.toast = Toast.show(msg, this.toastShortOptions);
     }
 
-    // 去忘记密码页面
-    goForget() {
-
-    }
-
-    // 去注册页面
-    goRegister() {
-
+    // 是否显示密码
+    togglePwd() {
+        this.setState({showPwd: !this.state.showPwd});
     }
 
     render() {
+        const btnCanPress = (this.state.input_user && this.state.input_pwd && !this.state.waiting)?true:false;
+
         return (
             <View style={styles.container}>
                 <NavBar
                     title={"找回密码"}
                     statusBar={{hidden: true}} // ios的状态栏才有效
+                    leftText="返回"
+                    leftFunc={()=>this.props.navigator.pop()}
                 />
                 <InputScrollView
                     style={styles.contentContainer}
@@ -156,34 +143,15 @@ class Reset extends Component {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={[styles.text_box, styles.text_box_gap_top]}>
-                        <TextInput
-                            style={styles.text_box_text}
-                            underlineColorAndroid="transparent"
-                            placeholder="请输入验证码"
-                            placeholderTextColor="#999999"
-                            value={this.state.input_code}
-                            keyboardType="numeric"
-                            onChangeText={input_code=>this.setState({input_code, error: ""})}
-                        />
-                        <TouchableOpacity
-                            style={[styles.text_box_controller, styles.pic_code]}
-                            activeOpacity={0.9}
-                            onPress={()=>this.sendCode()}
-                        >
-                            <Image
-                                source={{uri: this.props.codeContent && this.props.codeContent.img}}
-                                style={styles.pic_code}
-                            />
-                        </TouchableOpacity>
-                    </View>
 
-                    <NormalButton
-                        text="确定"
-                        style={styles.loginButton}
-                        enable={(this.state.input_user && this.state.input_pwd && this.state.input_code && !this.state.waiting)?true:false}
-                        onPress={()=>this.login()}
-                    />
+                    <TouchableOpacity
+                        style={[styles.login_btn, !btnCanPress && styles.login_btn_disabled]}
+                        activeOpacity={1}
+                        disabled={!btnCanPress}
+                        onPress={()=>this.logout()}
+                    >
+                        <Text style={styles.login_button_text}>确定</Text>
+                    </TouchableOpacity>
                 </InputScrollView>
             </View>
         );
@@ -192,10 +160,10 @@ class Reset extends Component {
 
 export default connect(
     state=>({
-        codeContent: state.auth.codeContent, // 验证码信息
+
     }),
     dispatch=>({
         sendCode: ()=>dispatch(sendCode()), // 获取验证码
-        login: (data)=>dispatch(login(data)) // 登陆
+        reset: (data)=>dispatch(reset(data)) // 登陆
     })
 )(Reset)

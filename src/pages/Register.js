@@ -14,7 +14,6 @@ import {connect} from 'react-redux';
 import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
 import NavBar from '../components/NavBar';
-import {NormalButton} from '../components/ButtonSet';
 import {AppImage} from '../resource/AppImage';
 
 import {register, sendCode} from '../modules/redux/modules/auth';
@@ -50,6 +49,10 @@ class Register extends Component {
         this.toast = null;
     }
 
+    componentDidMount() {
+        this.sendCode();
+    }
+
     // 发送短信验证码
     async sendCode() {
         try {
@@ -74,8 +77,10 @@ class Register extends Component {
                 changeCode: this.state.input_code
             };
             try {
-                // await this.props.register(data);
-                this.props.navigator.push({location: '/splashScreen'});
+                await this.props.register(data);
+                this.props.navigator.resetTo({location: '/'});
+                // 用于刷新登陆页的图片验证码
+                this.sendCode();
             }
             catch (error) {
                 this.toastLong(error.message);
@@ -112,11 +117,15 @@ class Register extends Component {
     }
 
     render() {
+        const btnCanPress = (this.state.input_user && this.state.input_pwd && !this.state.waiting)?true:false;
+
         return (
             <View style={styles.container}>
                 <NavBar
                     title={"注册"}
                     statusBar={{hidden: true}} // ios的状态栏才有效
+                    leftText="返回"
+                    leftFunc={()=>this.props.navigator.pop()}
                 />
                 <InputScrollView
                     style={styles.contentContainer}
@@ -178,12 +187,14 @@ class Register extends Component {
                         </TouchableOpacity>
                     </View>
 
-                    <NormalButton
-                        text="注册"
-                        style={styles.loginButton}
-                        enable={(this.state.input_user && this.state.input_pwd && this.state.input_code && !this.state.waiting)?true:false}
+                    <TouchableOpacity
+                        style={[styles.login_btn, !btnCanPress && styles.login_btn_disabled]}
+                        activeOpacity={1}
+                        disabled={!btnCanPress}
                         onPress={()=>this.register()}
-                    />
+                    >
+                        <Text style={styles.login_button_text}>注册</Text>
+                    </TouchableOpacity>
                 </InputScrollView>
             </View>
         );

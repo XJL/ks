@@ -2,7 +2,7 @@
  * Created by zhuman on 16/9/22.
  */
 import {StyleSheet} from 'react-native';
-import {fixedFontSize, HAIR_LINE} from '../../constants/style';
+import {fixedFontSize, HAIR_LINE, SCREEN_WIDTH} from '../../constants/style';
 
 export var styles = StyleSheet.create({
     container: {
@@ -12,37 +12,36 @@ export var styles = StyleSheet.create({
         overflow: "hidden",
     },
     header_bg: {
-        position: 'absolute',
-        top: -150,
-        left: -50,
-        width: 500,
-        height: 500,
-        borderRadius: 250,
-        transform: [{rotate: "60deg"}]
+        width: SCREEN_WIDTH,
     },
     header_logo: {
-        marginVertical: 20,
         alignSelf: 'center',
-        height: 100,
-        width: 100,
+    },
+    header_name: {
+        alignSelf: 'center',
+        fontFamily: "PingFangSC-Regular",
+        fontSize: fixedFontSize(14),
+        color: "#f5f5f5"
     },
     header_item_row: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#555555',
+        backgroundColor: "rgba(255, 255, 255, 0.2)"
     },
     header_item: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 15
     },
     header_item_text: {
-        fontSize: fixedFontSize(16),
-        color: "#ffffff",
+        fontFamily: "PingFangSC-Light",
+        fontSize: fixedFontSize(17),
+        color: "#f5f5f5",
     },
-    header_item_text_gap: {
-        marginTop: 10
+    header_item_title: {
+        fontFamily: "PingFangSC-Light",
+        fontSize: fixedFontSize(13),
+        color: "#f5f5f5"
     },
 
     main_info_title_row: {
@@ -54,12 +53,13 @@ export var styles = StyleSheet.create({
     main_info_title_line: {
         width: 20,
         height: HAIR_LINE,
-        backgroundColor: 'black'
+        backgroundColor: "#333333"
     },
     main_info_title_text: {
-        fontSize: fixedFontSize(20),
-        color: "black",
-        marginHorizontal: 10
+        fontSize: fixedFontSize(16),
+        color: "#333333",
+        marginHorizontal: 12,
+        fontFamily: "PingFangSC-Light",
     },
     main_info_list: {
         paddingHorizontal: 30,
@@ -82,8 +82,7 @@ export var styles = StyleSheet.create({
     },
 
     logout_btn: {
-        height: 50,
-        backgroundColor: '#dddddd',
+        backgroundColor: "#f5f5f5",
         alignItems: 'center',
         paddingVertical: 15
     },

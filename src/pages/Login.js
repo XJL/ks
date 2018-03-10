@@ -14,9 +14,7 @@ import {connect} from 'react-redux';
 import {styles} from '../styles/pages/Login.style';
 import InputScrollView from '../components/InputScrollView';
 import NavBar from '../components/NavBar';
-import {NormalButton} from '../components/ButtonSet';
 import {AppImage} from '../resource/AppImage';
-
 import {login, sendCode} from '../modules/redux/modules/auth';
 
 class Login extends Component {
@@ -50,6 +48,10 @@ class Login extends Component {
         this.toast = null;
     }
 
+    componentDidMount() {
+        this.sendCode();
+    }
+
     // 发送短信验证码
     async sendCode() {
         try {
@@ -63,20 +65,21 @@ class Login extends Component {
     // 登陆
     async login() {
         if(this.verify()) {
+            this.setState({waiting: true});
             const data = {
                 username: this.state.input_user,
                 password: this.state.input_pwd,
                 changeCode: this.state.input_code
             };
             try {
-                // await this.props.login(data);
-                this.props.navigator.replace({
-                    location: '/splashScreen'
-                });
+                await this.props.login(data);
+                this.toastLong("登陆成功");
+                this.props.navigator.resetTo({location: '/user'});
             }
             catch (error) {
                 this.toastLong(error.message);
             }
+            this.setState({waiting: false});
         }
     }
 
@@ -124,6 +127,8 @@ class Login extends Component {
     }
 
     render() {
+        const btnCanPress = (this.state.input_user && this.state.input_pwd && this.state.input_code && !this.state.waiting)?true:false;
+
         return (
             <View style={styles.container}>
                 <NavBar
@@ -135,7 +140,6 @@ class Login extends Component {
                     onResponderRelease={()=>dismissKeyboard()}
                 >
                     <Image source={AppImage.logo} style={styles.logo}/>
-                    
                     <View style={styles.text_box}>
                         <TextInput
                             style={styles.text_box_text}
@@ -190,16 +194,28 @@ class Login extends Component {
                        </TouchableOpacity>
                     </View>
 
-                    <NormalButton
-                        text="登录"
-                        style={styles.loginButton}
-                        enable={(this.state.input_user && this.state.input_pwd && this.state.input_code && !this.state.waiting)?true:false}
+                    <TouchableOpacity
+                        style={[styles.login_btn, !btnCanPress && styles.login_btn_disabled]}
+                        activeOpacity={1}
+                        disabled={!btnCanPress}
                         onPress={()=>this.login()}
-                    />
+                    >
+                        <Text style={styles.login_button_text}>登陆</Text>
+                    </TouchableOpacity>
 
-                    <View style={styles.optRow}>
-                        <Text onPress={()=>this.goRegister()}>快速注册</Text>
-                        <Text onPress={()=>this.goForget()}>找回密码</Text>
+                    < View style={styles.optRow}>
+                        <Text
+                            style={styles.opt_row_text}
+                            onPress={()=>this.goRegister()}
+                        >
+                            快速注册
+                        </Text>
+                        <Text
+                            style={styles.opt_row_text}
+                            onPress={()=>this.goForget()}
+                        >
+                            找回密码
+                        </Text>
                     </View>
                 </InputScrollView>
             </View>
@@ -213,6 +229,6 @@ export default connect(
     }),
     dispatch=>({
         sendCode: ()=>dispatch(sendCode()), // 获取验证码
-        login: (data)=>dispatch(login(data)) // 登陆
+        login: (data)=>dispatch(login(data)), // 登陆
     })
 )(Login)

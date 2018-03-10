@@ -1,14 +1,15 @@
 
 export const host = `http://fd.ksglxt.com`;
+// export const host = `http://192.168.1.104:8080`;
 
 export const sendCode = "imageCode.do";
 
-export const login = "manager/personalLogin.do";
+export const login = "node/personalLogin.do";
 
-export const register = "manager/insertpersonalInfo.do";
+export const register = "node/insertpersoanlInfo.do";
 
-export const logout = "manager/loginToOut.do";
+export const logout = "node/loginToOut.do";
 
-export const upload = "manager/insertpersonalmailInfo.do";
+export const upload = "node/insertpersonalmailInfo.do";
 
-export const reset = "manager/updatePaseeword.do";
+export const reset = "node/updatePaseeword.do";

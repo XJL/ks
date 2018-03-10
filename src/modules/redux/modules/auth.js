@@ -2,10 +2,7 @@
  * 用户行为信息管理模块
  */
 import { createAction, handleActions } from 'redux-actions';
-import DeviceInfo from 'react-native-device-info';
-
 import * as Request from '../../../modules/network/request';
-import {appVersion} from '../../../constants/def';
 
 const initialState = {};
 
@@ -68,7 +65,7 @@ export function login(data) {
             }
             // 登陆
             const rsp = await Request.apiPost(Request.URLs.login, requestData);
-            dispatch(Action.loginAction({userInfo: rsp.returnMap}));
+            dispatch(Action.loginAction({userInfo: rsp.content}));
         }
         catch (error) {
             throw error;
@@ -127,7 +124,7 @@ export function uploadContact(data) {
     return async function (dispatch, getState) {
         try {
             let requestData = data;
-            await Request.apiPost(Request.URLs.register, requestData);
+            await Request.apiPost(Request.URLs.upload, requestData);
         }
         catch (error) {
             throw error;
@@ -135,18 +132,11 @@ export function uploadContact(data) {
     }
 }
 
-// 上报通讯录
+// 重置密码
 export function reset(data) {
     return async function (dispatch, getState) {
         try {
-            const code = getState().auth.codeContent;
             let requestData = data;
-            if(code) {
-                requestData.token = code.token;
-            }
-            else {
-                throw new Error("请先获取验证码");
-            }
             await Request.apiPost(Request.URLs.reset, requestData);
         }
         catch (error) {

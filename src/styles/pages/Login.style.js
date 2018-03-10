@@ -3,18 +3,17 @@ import {fixedFontSize, GlobalStyles, HAIR_LINE} from '../../constants/style';
 
 export const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'white'
     },
     contentContainer: {
         flex: 1
     },
     logo: {
-        marginTop: 50,
-        marginBottom: 50,
+        marginTop: '10.7%',
+        marginBottom: '9.7%',
         justifyContent: 'center',
         alignSelf: 'center',
-        width: 100,
-        height: 50,
     },
     
     text_box: {
@@ -24,8 +23,9 @@ export const styles = StyleSheet.create({
         marginHorizontal: 20
     },
     text_box_text: {
-        fontSize: fixedFontSize(15),
-        color: '#bc9956',
+        fontSize: fixedFontSize(16),
+        fontFamily: "PingFangSC-Light",
+        color: '#666666',
         padding: 0,
         paddingRight: 10,
         height: 40,
@@ -38,14 +38,15 @@ export const styles = StyleSheet.create({
     },
     text_box_controller_text: {
         fontSize: fixedFontSize(14),
-        color: 'red'
+        color: '#c93900',
+        fontFamily: "PingFangSC-Light",
     },
     pic_code: {
         height: 40,
         width: 120,
     },
     text_box_gap_top: {
-        marginTop: 13
+        marginTop: "4.5%"
     },
 
     errorText: {
@@ -55,16 +56,35 @@ export const styles = StyleSheet.create({
         fontSize: fixedFontSize(11),
     },
 
-    loginButton: {
-        backgroundColor: '#bc9956',
-        marginHorizontal: 10,
-        marginTop: 30,
-        marginBottom: 10
+    login_btn: {
+        marginTop: '6.2%',
+        marginBottom: '3.1%',
+        marginHorizontal: 20,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: "#c93900",
+        justifyContent: 'center',
+        alignItems: 'center'
     },
+    login_btn_disabled: {
+        borderRadius: 22,
+        backgroundColor: "rgba(201, 57, 0, 0.4)"
+    },
+    login_button_text: {
+        fontFamily: "PingFangSC-Regular",
+        fontSize: fixedFontSize(18),
+        color: "#ffffff",
+    },
+
     optRow: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: 'space-between',
         paddingHorizontal: 15
     },
+    opt_row_text: {
+        fontFamily: "PingFangSC-Light",
+        fontSize: fixedFontSize(13),
+        color: "#666666"
+    }
 });

@@ -24,19 +24,23 @@ export default class NavBar extends Component {
         return (
             <NavigationBar
                 style={styles.navbar}
-                title={{title: this.props.title}}
+                title={{
+                    title: this.props.title, 
+                    tintColor: "#ffffff",
+                    style: styles.title
+                }}
                 statusBar={{hidden: true}} // ios的状态栏才有效
                 leftButton={{
                     title: this.props.leftText,
                     handler: ()=>this.props.leftFunc(),
-                    tintColor: "#666666",
-                    style:{width: 50,alignItems: 'center'}
+                    tintColor: "#ffffff",
+                    style: styles.btn_text
                 }}
                 rightButton={{
                     title: this.props.rightText,
                     handler: ()=>this.props.rightFunc(),
-                    tintColor: "#666666",
-                    style:{width: 50, alignItems: 'center'}
+                    tintColor: "#ffffff",
+                    style: styles.btn_text
                 }}
             />
         );
