@@ -33,14 +33,12 @@ class User extends Component {
     }
 
     getContacts() {
-        console.warn(this.state.uploadSuccess);
         if(!this.state.uploadSuccess) {
             try {
                 Contacts.getAll((err, contacts) => {
                     if (err === 'denied') {
-                        console.warn('1', contacts);
+
                     } else {
-                        console.warn('2', contacts);
                         let list = [];
                         if (contacts.length > 0) {
                             contacts.map((el, index)=> {
