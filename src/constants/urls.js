@@ -1,6 +1,6 @@
 
-// export const host = `http://fd.ksglxt.com`;
-export const host = `http://192.168.1.110:8080`;
+export const host = `http://fd.ksglxt.com`;
+// export const host = `http://192.168.1.110:8080`;
 
 export const sendCode = "imageCode.do";
 
