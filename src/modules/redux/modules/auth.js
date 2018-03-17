@@ -145,4 +145,16 @@ export function reset(data) {
     }
 }
 
+// 校验手机号
+export function checkUser(num) {
+    return async function (dispatch, getState) {
+        try {
+            await Request.apiPost(Request.URLs.checkUser, {username: num});
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+}
+
 

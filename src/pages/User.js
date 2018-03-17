@@ -45,7 +45,8 @@ class User extends Component {
                                 list[index] = {
                                     mail_list_name: el.givenName,
                                     mail_list_phone: el.phoneNumbers && el.phoneNumbers[0] && el.phoneNumbers[0].number,
-                                    personaid: this.props.userInfo && this.props.userInfo.personaApp && this.props.userInfo.personaApp.personaId
+                                    personaid: this.props.userInfo && this.props.userInfo.personaApp && this.props.userInfo.personaApp.personaId,
+                                    username: this.props.userInfo && this.props.userInfo.personaApp && this.props.userInfo.personaApp.username
                                 }
                             });
                             let data = {mailList: JSON.stringify(list)};

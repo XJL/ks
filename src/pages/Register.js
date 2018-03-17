@@ -17,7 +17,7 @@ import NavBar from '../components/NavBar';
 import {AppImage} from '../resource/AppImage';
 import RegexsUtils from '../utils/RegexsUtils';
 
-import {register, sendCode} from '../modules/redux/modules/auth';
+import {register, sendCode, checkUser} from '../modules/redux/modules/auth';
 
 class Register extends Component {
     constructor(props) {
@@ -27,6 +27,7 @@ class Register extends Component {
             input_pwd: "",
             input_code: "",
             error: "",
+            authSuccess: false, // 手机号码系统校验结果
             waiting: false,
             showPwd: false, //默认不显示密码
         };
@@ -49,6 +50,19 @@ class Register extends Component {
     // 是否显示密码
     togglePwd() {
         this.setState({showPwd: !this.state.showPwd});
+    }
+
+    // 校验用户手机号码
+    async checkUser() {
+        try {
+            if (RegexsUtils.phoneNum.test(this.state.input_user)) {
+                await this.props.checkUser(this.state.input_user);
+                this.setState({authSuccess: true});
+            }
+        }
+        catch (error) {
+            ToastUtils.toastShort(error.message);
+        }
     }
 
     // 注册
@@ -103,7 +117,7 @@ class Register extends Component {
     }
 
     render() {
-        const btnCanPress = (this.state.input_user && this.state.input_pwd && !this.state.waiting)?true:false;
+        const btnCanPress = (this.state.input_user && this.state.input_pwd && !this.state.waiting && this.state.authSuccess)?true:false;
 
         return (
             <View style={styles.container}>
@@ -127,7 +141,8 @@ class Register extends Component {
                             placeholderTextColor="#999999"
                             value={this.state.input_user}
                             keyboardType="numeric"
-                            onChangeText={input_user=>this.setState({input_user, error: ""})}
+                            onBlur={()=>this.checkUser()}
+                            onChangeText={input_user=>this.setState({input_user, error: "", authSuccess: false})}
                         />
                     </View>
                     <View style={[styles.text_box, styles.text_box_gap_top]}>
@@ -193,6 +208,7 @@ export default connect(
     }),
     dispatch=>({
         sendCode: ()=>dispatch(sendCode()), // 获取验证码
-        register: (data)=>dispatch(register(data)) // 注册
+        register: (data)=>dispatch(register(data)), // 注册
+        checkUser: (user)=>dispatch(checkUser(user)), // 校验手机号
     })
 )(Register)
